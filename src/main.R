@@ -1,7 +1,7 @@
-source('~/Documents/Temat14/src/utils/read.r')
-source('~/Documents/Temat14/src/utils/write.r')
-source('~/Documents/Temat14/src/utils/generate.r')
-source('~/Documents/Temat14/src/algorithm/colabFilter.r')
+source('~/Documents/Temat14/src/utils/read.R')
+source('~/Documents/Temat14/src/utils/write.R')
+source('~/Documents/Temat14/src/utils/generate.R')
+source('~/Documents/Temat14/src/algorithm/colabFilter.R')
 
 
 main.main <- function(){
@@ -10,10 +10,10 @@ main.main <- function(){
   print('Begin')
   
   #import data from csv files
-  source('~/Documents/Temat14/src/utils/read.r')
-  source('~/Documents/Temat14/src/utils/write.r')
-  source('~/Documents/Temat14/src/utils/generate.r')
-  source('~/Documents/Temat14/src/algorithm/colabFilter.r')
+  source('~/Documents/Temat14/src/utils/read.R')
+  source('~/Documents/Temat14/src/utils/write.R')
+  source('~/Documents/Temat14/src/utils/generate.R')
+  source('~/Documents/Temat14/src/algorithm/colabFilter.R')
   
   print("Load data")
   # Load rating data
