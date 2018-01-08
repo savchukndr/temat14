@@ -20,12 +20,12 @@ generate.generate_complete_df = function(df, user_id, item, rating){
     row = which(df$user_id == user_id[[i]])
     m = mean(rating)
     
-    # Binarize ratings
-    if (rating[[i]] < m){
-      df[[col]][[row]] = 0
-    } else{
-      df[[col]][[row]] = 1
-    }
+    df[[col]][[row]] = rating[[i]]
+    #if (rating[[i]] < m){
+    #  df[[col]][[row]] = 0
+    #} else{
+    #  df[[col]][[row]] = 1
+    #}
   }
   return(df)
 }

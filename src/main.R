@@ -1,8 +1,10 @@
 source('~/Documents/Temat14/src/utils/read.R')
 source('~/Documents/Temat14/src/utils/write.R')
 source('~/Documents/Temat14/src/utils/generate.R')
-source('~/Documents/Temat14/src/algorithm/colabFilter.R')
 
+setwd('~/Documents/Temat14/src')
+install.packages('recommender', repo=NULL, type='source')
+library(recommender)
 
 main.main <- function(){
   
@@ -13,7 +15,6 @@ main.main <- function(){
   source('~/Documents/Temat14/src/utils/read.R')
   source('~/Documents/Temat14/src/utils/write.R')
   source('~/Documents/Temat14/src/utils/generate.R')
-  source('~/Documents/Temat14/src/algorithm/colabFilter.R')
   
   print("Load data")
   # Load rating data
@@ -35,23 +36,25 @@ main.main <- function(){
   
   print("Filling data frame")
   # Filling df.item.complete with ratings
-  df.item.complete = generate.generate_complete_df(df.item.holder, col_br_user, col_br_isbn, col_br_rating)
+  df.item.complete <- generate.generate_complete_df(df.item.holder, col_br_user, col_br_isbn, col_br_rating)
   
   # Writing results to a csv file
   # write_csv(fl="~/Documents/Mow_project/res.csv", df=df.item.complete)
   
   print("Filtering starts")
-  # List that contains results from item-based and user-based algorithms 
-  list_results = colabFilter.colaborative_filtering(df.item.complete)
+  
+  # TODO
+  # ub_results <- ub_collaborative_filtering(df.item.complete, 10)
+  ib_results <- ib_collaborative_filtering(df.item.complete, 5)
+  
   # ----- Writing results to a csv file -----
   print("Filtering ends")
   
   print("Write results into .csv files")
   # Item-Based results
-  write.write_csv(fl="~/Documents/Mow_project/item.csv", df=list_results[[1]])
+  write.write_csv(ib_results, fl="~/Documents/Mow_project/item.csv")
   # User-Based results
-  write.write_csv(fl="~/Documents/Mow_project/user.csv", df=list_results[[2]])
-  list_results[[3]]
+  #write.write_csv(fl="~/Documents/Mow_project/user.csv", df=ub_results)
   
   print('End')
 }

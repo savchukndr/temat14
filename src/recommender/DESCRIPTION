@@ -1,0 +1,13 @@
+Package: recommender
+Title: Simple Recommendation Library
+Version: 0.1.0
+Authors@R: c(
+    person("Andrii", "Savchuk", email="savchukndr@gmail.com", role=c("aut")),
+    person("Carlos", "Zaldivar Batista", email="carlos.zaldivar.batista@gmail.com", role=c("aut", "cre"))
+    )
+Description: Simple recommendation library written as part of a university project.
+Depends: R (>= 3.2.3)
+License: MIT
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
