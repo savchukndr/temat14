@@ -16,68 +16,74 @@ help.get_cosine = function(x,y)
   }
 }
 
-# A helper function to calculate the scores
-help.get_score = function(history, similarities)
-{
-  x = sum(history*similarities)/sum(similarities)
-  x
-}
-
-# TODO
 #' @export
-ub_collaborative_filtering <- function(df, n_recommendations = 10)
+ub_collaborative_filtering <- function(df, n_recommendations = 10, n_neighbours = 5)
 {
-  # A placeholder matrix
-  holder = matrix(NA, nrow=nrow(df),ncol=ncol(df)-1,dimnames=list((df$user_id),colnames(df[-1])))
+  df.ubs = (df[,!(names(df) %in% c("user_id"))])
+  rownames(df.ubs) <- df$user_id
 
-  # Loop through the users (rows)
-  for(i in 1:nrow(holder))
-  {
-    # Loops through the products (columns)
-    for(j in 1:ncol(holder))
-    {
-      # Get the user's name and th product's name
-      user = rownames(holder)[i]
-      product = colnames(holder)[j]
+  # Create a placeholder dataframe listing user vs.user
+  df.ubs.similarity  = matrix(0L, nrow=nrow(df.ubs),ncol=nrow(df.ubs),dimnames=list(rownames(df.ubs),rownames(df.ubs)))
 
-      # Remove already consumed products
-      if(as.integer(df[df$user_id==user,product]) == 1)
+  # Loop through the rows
+  for(i in 1:nrow(df.ubs)) {
+    # Loop through the row for each row
+    for(j in 1:nrow(df.ubs)) {
+      # Fill in placeholder with cosine similarities
+      if (i != j)
       {
-        holder[i,j]=""
-      } else {
-
-        # Top 10 neighbours sorted by similarity
-        topN=((head(n=11,(df.ibs.similarity[order(df.ibs.similarity[,product],decreasing=TRUE),][product]))))
-        topN.names = as.character(rownames(topN))
-        topN.similarities = as.numeric(topN[,1])
-
-        # Drop first because it will be the same product
-        topN.similarities=topN.similarities[-1]
-        topN.names=topN.names[-1]
-
-        # Get user rating history for those 10 items
-        topN.purchases= df[,c("user_id",topN.names)]
-        topN.userPurchases=topN.purchases[topN.purchases$user_id==user,]
-        topN.userPurchases = as.numeric(topN.userPurchases[!(names(topN.userPurchases) %in% c("user_id"))])
-
-        # Calculate the score for that product and that user
-        holder[i,j]=help.get_score(similarities=topN.similarities,history=topN.userPurchases)
+        sim = help.get_cosine(as.matrix(df.ubs[i]),as.matrix(df.ubs[j]))
+        df.ubs.similarity[i,j] <- sim
       }
     }
   }
 
-  df.user.scores = holder
+  # Back to dataframe
+  df.ubs.similarity = as.data.frame(df.ubs.similarity)
 
-  # Filling recommendation with names
-  df.user.scores.holder = matrix(NA, nrow=nrow(df.user.scores),ncol=n_recommendations,dimnames=list(rownames(df.user.scores)))
-  for(i in 1:nrow(df.user.scores))
+  # Get the top neighbours for each user
+  df.neighbours = matrix(NA, nrow=nrow(df.ubs.similarity),ncol=n_neighbours,dimnames=list(rownames(df.ubs.similarity)))
+  neighbours_similarities = matrix(NA, nrow=ncol(df.ubs.similarity),ncol=n_neighbours,dimnames=list(rownames(df.ubs.similarity)))
+
+  for(i in 1:nrow(df.ubs))
   {
-    df.user.scores.holder[i,] = names(head(n=n_recommendations,(df.user.scores[,order(df.user.scores[i,],decreasing=TRUE)])[i,]))
+    df.neighbours[i,] = (t(head(n=n_neighbours,rownames(df.ubs.similarity[order(df.ubs.similarity[,i],decreasing=TRUE),][i]))))
+    neighbours_similarities[i,] = (t(head(n=n_neighbours,df.ubs.similarity[order(df.ubs.similarity[,i],decreasing=TRUE),][i])))
   }
-  return(df.user.scores.holder)
+
+  # Matrix of predicted ratings
+  predictions = matrix(0L, nrow=nrow(df.ubs), ncol=ncol(df.ubs))
+
+  rownames(predictions) <-df[["user_id"]]
+  colnames(predictions) <- colnames(df.ubs)
+  for(i in 1:nrow(predictions))
+  {
+    for(j in 1:ncol(predictions))
+    {
+      if (df.ubs[i, j] == 0)
+      {
+        rows <- rownames(predictions) %in% df.neighbours[i,]
+        m <- mean(df.ubs[rows, j][df.ubs[rows, j] != 0])
+        if (!is.nan(m))
+        {
+          predictions[i, j] <- m
+
+        }
+      }
+    }
+  }
+
+  recommendations = matrix(NA, nrow=nrow(predictions), ncol=n_recommendations)
+  rownames(recommendations) <- rownames(predictions)
+  for(i in 1:nrow(recommendations))
+  {
+    cols <- head(n = n_recommendations, order(predictions[i,], decreasing = TRUE))
+    recommendations[i,] <- colnames(predictions[,cols])
+  }
+  return(recommendations)
 }
 
-#' @export
+#'@export
 ib_collaborative_filtering <- function(df, n_recommendations = 10, n_neighbours = 5)
 {
   df.ibs = (df[,!(names(df) %in% c("user_id"))])
@@ -101,7 +107,7 @@ ib_collaborative_filtering <- function(df, n_recommendations = 10, n_neighbours 
   # Back to dataframe
   df.ibs.similarity = as.data.frame(df.ibs.similarity)
 
-  # Get the top neighbours for each
+  # Get the top neighbours for each item
   df.neighbours = matrix(NA, nrow=ncol(df.ibs.similarity),ncol=n_neighbours,dimnames=list(colnames(df.ibs.similarity)))
   neighbours_similarities = matrix(NA, nrow=ncol(df.ibs.similarity),ncol=n_neighbours,dimnames=list(colnames(df.ibs.similarity)))
 
@@ -120,7 +126,7 @@ ib_collaborative_filtering <- function(df, n_recommendations = 10, n_neighbours 
   {
     for(j in 1:ncol(predictions))
     {
-      if (df.ibs[i, j] != 0)
+      if (df.ibs[i, j] == 0)
       {
         cols <- colnames(predictions) %in% df.neighbours[j,]
         items <- df.ibs[i, cols]

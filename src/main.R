@@ -43,10 +43,9 @@ main.main <- function(){
   
   print("Filtering starts")
   
-  # TODO
-  # ub_results <- ub_collaborative_filtering(df.item.complete, 10)
+  ub_results <- ub_collaborative_filtering(df.item.complete, 5)
   ib_results <- ib_collaborative_filtering(df.item.complete, 5)
-  
+
   # ----- Writing results to a csv file -----
   print("Filtering ends")
   
@@ -54,7 +53,7 @@ main.main <- function(){
   # Item-Based results
   write.write_csv(ib_results, fl="~/Documents/Mow_project/item.csv")
   # User-Based results
-  #write.write_csv(fl="~/Documents/Mow_project/user.csv", df=ub_results)
+  write.write_csv(fl="~/Documents/Mow_project/user.csv", df=ub_results)
   
   print('End')
 }
