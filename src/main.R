@@ -8,6 +8,7 @@ library(recommender)
 
 main.main <- function(){
   
+  row_length = 300
   
   print('Begin')
   
@@ -18,7 +19,7 @@ main.main <- function(){
   
   print("Load data")
   # Load rating data
-  books_rating = read.read_csv(fl="~/Documents/BX-CSV-Dump 2/BX-Book-Ratings.csv", rowLen = 150)
+  books_rating = read.read_csv(fl="~/Documents/BX-CSV-Dump 2/BX-Book-Ratings.csv", rowLen = row_length)
   #books_rating = read.read_csv(fl="~/Documents/MOWproj/BX-Book-Ratings.csv", rowLen = 35)
   
   # get specified columns from imported data
@@ -43,9 +44,15 @@ main.main <- function(){
   
   print("Filtering starts")
   
-  ub_results <- ub_collaborative_filtering(df.item.complete, 5)
-  ib_results <- ib_collaborative_filtering(df.item.complete, 5)
-
+  print("User-based algorythm starts:")
+  print(system.time(ub_results <- ub_collaborative_filtering(df.item.complete, 10, 4)))
+  print("User based algorythm ends, Item-based starts:")
+  print(system.time(ib_results <- ib_collaborative_filtering(df.item.complete, 10, 4)))
+  print("Item-based algotythm ends.")
+  
+  print(object.size(ub_results))
+  print(object.size(ib_results))
+  
   # ----- Writing results to a csv file -----
   print("Filtering ends")
   
