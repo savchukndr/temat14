@@ -1,7 +1,3 @@
-source('~/Documents/Temat14/src/utils/read.R')
-source('~/Documents/Temat14/src/utils/write.R')
-source('~/Documents/Temat14/src/utils/generate.R')
-
 setwd('~/Documents/Temat14/src')
 install.packages('recommender', repo=NULL, type='source')
 library(recommender)

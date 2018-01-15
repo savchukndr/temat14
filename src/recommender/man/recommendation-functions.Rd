@@ -3,10 +3,10 @@
 \name{recommendation-functions}
 \alias{recommendation-functions}
 \alias{help.get_cosine}
-\title{Recommendation model.}
+\title{Recommendation functions.}
 \usage{
 help.get_cosine(x, y)
 }
 \description{
-Recommendation model.
+Recommendation functions.
 }

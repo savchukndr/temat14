@@ -16,6 +16,17 @@ help.get_cosine = function(x,y)
   }
 }
 
+
+#'@title ub_collaborative_filtering
+#'@description
+#'User-based collaborative filtering implementation. For every user it searches its nearest neighbours
+#'(users most similar to him) and derives grade predictions from grades that his neighbours gave to items he didn't grade himself. Finally
+#'for every user it returns a list of recommendations - items with highest predicted grade.
+#'
+#' @param df data.frame containing user-item matrix with grades that users give to items they know.
+#' @param n_recommendations Number of recommendations to be returned for every user.
+#' @param n_neighbours Number of user neighbours used when calculating grade predictions.
+#' @return matrix containing IDs of recommended items for each user. It has dimensions number-of-users x n_recommendations
 #' @export
 ub_collaborative_filtering <- function(df, n_recommendations = 10, n_neighbours = 5)
 {
@@ -83,7 +94,15 @@ ub_collaborative_filtering <- function(df, n_recommendations = 10, n_neighbours 
   return(recommendations)
 }
 
-#'@export
+#'@title ib_collaborative_filtering
+#'@description
+#'Item-based collaborative filtering implementation. It searches for items similar to each other and from that it derives recommendations
+#'(if user graded an item highly, it will probably grade items similar to it highly too).
+#' @param df data.frame containing user-item matrix with grades that users give to items they know.
+#' @param n_recommendations Number of recommendations to be returned for every user.
+#' @param n_neighbours Number of item neighbours used when calculating grade predictions.
+#' @return matrix containing IDs of recommended items for each user. It has dimensions number-of-users x n_recommendations
+#' @export
 ib_collaborative_filtering <- function(df, n_recommendations = 10, n_neighbours = 5)
 {
   df.ibs = (df[,!(names(df) %in% c("user_id"))])
