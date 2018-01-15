@@ -1,4 +1,3 @@
-setwd('~/Documents/Temat14/src')
 install.packages('recommender', repo=NULL, type='source')
 library(recommender)
 
@@ -9,13 +8,13 @@ main.main <- function(){
   print('Begin')
   
   #import data from csv files
-  source('~/Documents/Temat14/src/utils/read.R')
-  source('~/Documents/Temat14/src/utils/write.R')
-  source('~/Documents/Temat14/src/utils/generate.R')
+  source('utils/read.R')
+  source('utils/write.R')
+  source('utils/generate.R')
   
   print("Load data")
   # Load rating data
-  books_rating = read.read_csv(fl="~/Documents/BX-CSV-Dump 2/BX-Book-Ratings.csv", rowLen = row_length)
+  books_rating = read.read_csv(fl="../BX-CSV-Dump 2/BX-Book-Ratings.csv", rowLen = row_length)
   #books_rating = read.read_csv(fl="~/Documents/MOWproj/BX-Book-Ratings.csv", rowLen = 35)
   
   # get specified columns from imported data
@@ -35,9 +34,6 @@ main.main <- function(){
   # Filling df.item.complete with ratings
   df.item.complete <- generate.generate_complete_df(df.item.holder, col_br_user, col_br_isbn, col_br_rating)
   
-  # Writing results to a csv file
-  # write_csv(fl="~/Documents/Mow_project/res.csv", df=df.item.complete)
-  
   print("Filtering starts")
   
   print("User-based algorythm starts:")
@@ -54,9 +50,9 @@ main.main <- function(){
   
   print("Write results into .csv files")
   # Item-Based results
-  write.write_csv(ib_results, fl="~/Documents/Mow_project/item.csv")
+  write.write_csv(ib_results, fl="../item.csv")
   # User-Based results
-  write.write_csv(fl="~/Documents/Mow_project/user.csv", df=ub_results)
+  write.write_csv(fl="../user.csv", df=ub_results)
   
   print('End')
 }

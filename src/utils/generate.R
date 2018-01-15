@@ -21,11 +21,6 @@ generate.generate_complete_df = function(df, user_id, item, rating){
     m = mean(rating)
     
     df[[col]][[row]] = rating[[i]]
-    #if (rating[[i]] < m){
-    #  df[[col]][[row]] = 0
-    #} else{
-    #  df[[col]][[row]] = 1
-    #}
   }
   return(df)
 }
